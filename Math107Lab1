@@ -13,7 +13,7 @@
     "\n",
     "Every step is explained, and you'll mostly just be **modifying existing code** rather than writing it from scratch.\n",
     "\n",
-    "The notebook has a few custom written functions.  You are not responsible for understanding that code.  Just run the cell and then you will be able to call the function and have it work for oyu in subsequent cells.\n",
+    "The notebook has a few custom written functions.  You are not responsible for understanding that code.  Just run the cell and then you will be able to call the function and have it work for you in subsequent cells.\n",
     "\n",
     "**How to use this notebook:**\n",
     "- Each gray box (called a **cell**) contains either explanation text or Python code.\n",
@@ -274,6 +274,70 @@
     "print(\"\\nRow echelon form:\")\n",
     "print(row_echelon(Ab))\n",
     "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# ---------------------------------------------------------------\n",
+    "# This function takes matrix A and vector b, row-reduces the\n",
+    "# augmented matrix [A|b], and reports whether the system is\n",
+    "# inconsistent, consistent with a unique solution, or consistent\n",
+    "# with infinitely many solutions (free variables).\n",
+    "# You do NOT need to modify this — just run it to define the function.\n",
+    "# ---------------------------------------------------------------\n",
+    "def check_consistency(A, b):\n",
+    "    \"\"\"\n",
+    "    Row-reduces the augmented matrix [A | b] and determines whether\n",
+    "    the system Ax = b is inconsistent, uniquely consistent, or has\n",
+    "    infinitely many solutions.\n",
+    "    \"\"\"\n",
+    "    m, n = A.shape\n",
+    "    Ab = np.column_stack([A, b.astype(float)])\n",
+    "    E  = row_echelon(Ab.copy())\n",
+    "\n",
+    "    print(\"Augmented matrix [A | b]:\")\n",
+    "    print(Ab)\n",
+    "    print(\"\\nRow echelon form of [A | b]:\")\n",
+    "    print(np.round(E, 6))\n",
+    "\n",
+    "    # Check for a bad row: all zeros on A-side but nonzero on b-side\n",
+    "    inconsistent = False\n",
+    "    for row in E:\n",
+    "        if np.allclose(row[:n], 0) and abs(row[n]) > 1e-10:\n",
+    "            inconsistent = True\n",
+    "            break\n",
+    "\n",
+    "    if inconsistent:\n",
+    "        print(\"\\nResult: INCONSISTENT\")\n",
+    "        print(\"  A row of the form [0 ... 0 | c] with c ≠ 0 was found.\")\n",
+    "        print(\"  This equation says 0 = c, which is impossible.\")\n",
+    "        print(\"  The system has NO solution.\")\n",
+    "        return\n",
+    "\n",
+    "    # Count pivot columns in A-part only\n",
+    "    pivot_cols = []\n",
+    "    pivot_row_idx = 0\n",
+    "    for col in range(n):\n",
+    "        for r in range(pivot_row_idx, m):\n",
+    "            if abs(E[r, col]) > 1e-10:\n",
+    "                pivot_cols.append(col)\n",
+    "                pivot_row_idx += 1\n",
+    "                break\n",
+    "\n",
+    "    free_cols = [i for i in range(n) if i not in pivot_cols]\n",
+    "\n",
+    "    if len(free_cols) == 0:\n",
+    "        print(\"\\nResult: CONSISTENT — unique solution\")\n",
+    "        print(\"  Every column of A has a pivot: no free variables.\")\n",
+    "    else:\n",
+    "        print(\"\\nResult: CONSISTENT — infinitely many solutions\")\n",
+    "        print(f\"  Column(s) {[i+1 for i in free_cols]} of A have no pivot: free variable(s) exist.\")\n",
+    "\n",
+    "print(\"Function 'check_consistency' is defined and ready to use!\")\n"
    ]
   },
   {
@@ -802,6 +866,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "*Double-click here and type your response.*"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "\n",
     "### Problem 2 -- Linear Independence\n",
     "\n",
@@ -849,6 +920,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "*Double-click here and type your response.*"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "### Problem 3 -- One-to-One and Onto\n",
     "\n",
     "For each matrix below, use `analyze_linear_map` to determine if the map is\n",
@@ -885,6 +963,13 @@
     "                [???, ???],   # Row 3\n",
     "                [???, ???]], dtype=float)  # Row 4\n",
     "analyze_linear_map(A_b)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "*Double-click here and type your response.*"
    ]
   },
   {
@@ -949,6 +1034,13 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "*Double-click here and type your response.*"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "---\n",
     "\n",
     "### Problem 5 -- LU Factorization\n",
@@ -987,6 +1079,13 @@
     "print(\"\\nL @ U =\\n\", np.round(L @ U, 10))\n",
     "print(\"\\nP @ A =\\n\", np.round(P @ A, 10))\n",
     "print(\"\\nDo L @ U = P @ A?\", np.allclose(L @ U, P @ A))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "*Double-click here and type your response.*"
    ]
   },
   {
@@ -1033,15 +1132,8 @@
     "\n",
     "**Before submitting, double check:**\n",
     "- All code cells have been run and show output.\n",
-    "- Your written answers are filled in for each problem.  (For example, below Problem 3, double click and type your response.)"
+    "- Your written answers are filled in for each problem.  (Below each, double click and type your response.)"
    ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": []
   }
  ],
  "metadata": {
